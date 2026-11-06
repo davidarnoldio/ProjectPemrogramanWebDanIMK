@@ -90,7 +90,7 @@ export default function AdminLecturersPage() {
     setFormData((prev) => ({
       ...prev,
       nidn: val,
-      email: isEditMode ? prev.email : val ? `${val}@lecturer.ug.ac.id` : "",
+      email: isEditMode ? prev.email : val ? `${val}@dosenkampus.com` : "",
     }));
   };
 
@@ -119,7 +119,7 @@ export default function AdminLecturersPage() {
           ? "Data dosen berhasil diperbarui!"
           : "Dosen dan Akun Login otomatis berhasil dibuat!",
         details: !isEditMode
-          ? `Email: ${formData.nidn}@lecturer.ug.ac.id | Password: ${formData.nidn}`
+          ? `Email: ${formData.nidn}@dosenkampus.com | Password: ${formData.nidn}`
           : undefined,
       });
 
@@ -438,7 +438,7 @@ export default function AdminLecturersPage() {
                       <p className="mt-0.5 text-purple-800">
                         Akun dosen dibuat otomatis dengan email{" "}
                         <span className="font-mono font-semibold">
-                          {formData.nidn || "{nidn}"}@lecturer.ug.ac.id
+                          {formData.nidn || "{nidn}"}@dosenkampus.com
                         </span>{" "}
                         dan password awal default adalah NIDN dosen.
                       </p>

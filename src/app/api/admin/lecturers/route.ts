@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const lecturerEmail = email || `${nidn}@lecturer.ug.ac.id`;
+    const lecturerEmail = email || `${nidn}@dosenkampus.com`;
     let authUserId: string = crypto.randomUUID();
 
     // 1. Attempt Auto-create user in Supabase Auth

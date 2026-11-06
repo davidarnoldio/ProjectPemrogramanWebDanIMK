@@ -200,8 +200,8 @@ export default function Navbar() {
               <span>{timeStr || "WIB"}</span>
             </div>
 
-            {/* Role indicator only shown when already inside /admin or /lecturer */}
-            {(isAdmin || isLecturer) && (
+            {/* Role indicator shown when already inside /admin or /lecturer */}
+            {isAdmin || isLecturer ? (
               <div className="flex items-center gap-2">
                 <Link
                   href="/admin/dashboard"
@@ -224,6 +224,25 @@ export default function Navbar() {
                 >
                   <QrCode className="w-3.5 h-3.5" />
                   Dosen
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/admin/login"
+                  className="text-xs px-3 py-1.5 rounded-lg font-bold bg-purple-900 hover:bg-purple-800 text-white flex items-center gap-1.5 shadow-xs transition"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Login Admin</span>
+                  <span className="sm:hidden">Admin</span>
+                </Link>
+                <Link
+                  href="/lecturer/login"
+                  className="text-xs px-3 py-1.5 rounded-lg font-bold bg-purple-50 hover:bg-purple-100 text-purple-950 border border-purple-200 flex items-center gap-1.5 transition"
+                >
+                  <UserCheck className="w-3.5 h-3.5 text-purple-900" />
+                  <span className="hidden sm:inline">Login Dosen</span>
+                  <span className="sm:hidden">Dosen</span>
                 </Link>
               </div>
             )}

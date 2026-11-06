@@ -93,7 +93,7 @@ export default function HomePage() {
               <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
                 {/* 1. Portal Admin */}
                 <Link
-                  href="/admin/dashboard"
+                  href="/admin/login"
                   className="group relative p-5 rounded-2xl bg-purple-50/80 border border-purple-200 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-900/10 transition-all flex items-center justify-between overflow-hidden"
                 >
                   {/* Top Batik Ribbon Border */}
@@ -107,9 +107,14 @@ export default function HomePage() {
                       <ShieldCheck className="w-6 h-6 text-purple-900" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-sm">
-                        Portal Admin
-                      </h3>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-extrabold text-slate-900 text-sm">
+                          Portal Admin
+                        </h3>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-purple-200 text-purple-950">
+                          @adminkampus.com
+                        </span>
+                      </div>
                       <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                         Kelola data akademik, jadwal, dan laporan presensi
                       </p>
@@ -122,7 +127,7 @@ export default function HomePage() {
 
                 {/* 2. Portal Dosen */}
                 <Link
-                  href="/lecturer/dashboard"
+                  href="/lecturer/login"
                   className="group relative p-5 rounded-2xl bg-white border border-slate-200 hover:border-purple-300 hover:shadow-lg hover:shadow-purple-900/10 transition-all flex items-center justify-between overflow-hidden"
                 >
                   {/* Top Batik Ribbon Border */}
@@ -136,9 +141,14 @@ export default function HomePage() {
                       <UserCheck className="w-6 h-6 text-purple-900" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-sm">
-                        Portal Dosen
-                      </h3>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-extrabold text-slate-900 text-sm">
+                          Portal Dosen
+                        </h3>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-950">
+                          @dosenkampus.com
+                        </span>
+                      </div>
                       <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                         Mulai sesi presensi dan tampilkan QR code
                       </p>

@@ -180,11 +180,11 @@ ALTER PUBLICATION supabase_realtime ADD TABLE class_sessions;
 
 -- 1. Dummy Dosen
 INSERT INTO lecturers (id, nidn, name, department, email, phone) VALUES
-('11111111-1111-1111-1111-111111111101', '0412088501', 'Dr. Budi Santoso, S.Kom., M.M.S.I.', 'Sistem Informasi', 'budi.santoso@lecturer.ug.ac.id', '6281210000001'),
-('11111111-1111-1111-1111-111111111102', '0425039002', 'Rina Wijaya, S.T., M.Kom.', 'Sistem Informasi', 'rina.wijaya@lecturer.ug.ac.id', '6281210000002'),
-('11111111-1111-1111-1111-111111111103', '0410118803', 'Hendra Kusuma, S.Kom., M.T.I.', 'Teknik Informatika', 'hendra.kusuma@lecturer.ug.ac.id', '6281210000003'),
-('11111111-1111-1111-1111-111111111104', '0405079204', 'Siti Aminah, S.Si., M.Kom.', 'Sistem Informasi', 'siti.aminah@lecturer.ug.ac.id', '6281210000004'),
-('11111111-1111-1111-1111-111111111105', '0419018705', 'Arif Rahman Hakim, S.Kom., M.Sc.', 'Teknik Informatika', 'arif.hakim@lecturer.ug.ac.id', '6281210000005');
+('11111111-1111-1111-1111-111111111101', '0412088501', 'Dr. Budi Santoso, S.Kom., M.M.S.I.', 'Sistem Informasi', 'budi.santoso@dosenkampus.com', '6281210000001'),
+('11111111-1111-1111-1111-111111111102', '0425039002', 'Rina Wijaya, S.T., M.Kom.', 'Sistem Informasi', 'rina.wijaya@dosenkampus.com', '6281210000002'),
+('11111111-1111-1111-1111-111111111103', '0410118803', 'Hendra Kusuma, S.Kom., M.T.I.', 'Teknik Informatika', 'hendra.kusuma@dosenkampus.com', '6281210000003'),
+('11111111-1111-1111-1111-111111111104', '0405079204', 'Siti Aminah, S.Si., M.Kom.', 'Sistem Informasi', 'siti.aminah@dosenkampus.com', '6281210000004'),
+('11111111-1111-1111-1111-111111111105', '0419018705', 'Arif Rahman Hakim, S.Kom., M.Sc.', 'Teknik Informatika', 'arif.hakim@dosenkampus.com', '6281210000005');
 
 -- 2. Dummy Mata Kuliah
 INSERT INTO courses (id, code, name, sks, department) VALUES
