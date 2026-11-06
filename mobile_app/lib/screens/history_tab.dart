@@ -201,7 +201,7 @@ class _HistoryTabState extends State<HistoryTab> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: Color(0xFF0F172A),
                     letterSpacing: -0.5,
                   ),
                 ),

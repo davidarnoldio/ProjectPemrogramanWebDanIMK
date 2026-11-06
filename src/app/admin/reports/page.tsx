@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import { Printer, GraduationCap, ArrowLeft, Filter, BookOpen, FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
 import { formatIndonesianDateTime } from "@/lib/utils";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function AdminReportsPage() {
   const [classes, setClasses] = useState<any[]>([]);
@@ -224,8 +224,6 @@ export default function AdminReportsPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
-      <Navbar />
-
       {/* Top Bar (No Print) */}
       <div className="no-print bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -282,7 +280,8 @@ export default function AdminReportsPage() {
 
       {/* Printable Sheet Area */}
       <main className="max-w-4xl mx-auto my-8 p-0 sm:p-4 w-full flex-1">
-        <div className="bg-white rounded-none sm:rounded-2xl shadow-md border border-slate-200 p-8 sm:p-12 print-page">
+        <ScrollReveal direction="up" delay={0.08}>
+          <div className="bg-white rounded-none sm:rounded-2xl shadow-md border border-slate-200 p-8 sm:p-12 print-page">
           {/* KOP SURAT RESMI */}
           <div className="border-b-2 border-slate-900 pb-5 mb-6">
             <div className="flex items-center justify-between gap-6">
@@ -463,6 +462,7 @@ export default function AdminReportsPage() {
             <span className="font-mono">VERIFIED BY SUPABASE POSTGRESQL</span>
           </div>
         </div>
+        </ScrollReveal>
       </main>
     </div>
   );

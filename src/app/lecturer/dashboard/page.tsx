@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import {
   Calendar,
@@ -27,6 +26,7 @@ import {
   Check,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function LecturerDashboardPage() {
   const router = useRouter();
@@ -334,8 +334,6 @@ export default function LecturerDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Navbar />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
         {/* Notification Alert */}
         {notification && (
@@ -475,34 +473,35 @@ export default function LecturerDashboardPage() {
         )}
 
         {/* Teaching Schedule Cards Grid */}
-        <div className="my-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-slate-900">
-                  Jadwal Mengajar Anda
-                </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200/80 text-slate-700">
-                  {mySchedules.length} Kelas
-                </span>
+        <ScrollReveal direction="up" delay={0.08}>
+          <div className="my-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-slate-900">
+                    Jadwal Mengajar Anda
+                  </h2>
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200/80 text-slate-700">
+                    {mySchedules.length} Kelas
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Daftar mata kuliah dan kelas yang diampu pada Semester Ganjil 2026/2027
+                </p>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Daftar mata kuliah dan kelas yang diampu pada Semester Ganjil 2026/2027
-              </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={downloadCsvTemplate}
+                  className="text-xs text-purple-900 hover:text-purple-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-purple-50 transition"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Unduh Template CSV</span>
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={downloadCsvTemplate}
-                className="text-xs text-purple-900 hover:text-purple-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-purple-50 transition"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Unduh Template CSV</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mySchedules.length === 0 ? (
               <div className="col-span-full bg-white rounded-3xl p-10 sm:p-14 text-center border-2 border-dashed border-purple-200/80 shadow-xs">
                 <div className="w-16 h-16 rounded-2xl bg-purple-50 border border-purple-200 flex items-center justify-center mx-auto mb-4 text-purple-900 shadow-inner">
@@ -604,6 +603,7 @@ export default function LecturerDashboardPage() {
             )}
           </div>
         </div>
+        </ScrollReveal>
 
         {/* ============================================================== */}
         {/* MODAL 1: Tambah Jadwal Mengajar Manual                         */}

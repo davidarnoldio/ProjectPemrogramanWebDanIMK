@@ -61,6 +61,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _openSchedulePage() {
+    Navigator.push(
+      context,
+      AestheticPageRoute(
+        page: Scaffold(
+          backgroundColor: const Color(0xFFFAF9FD),
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF581C87),
+            foregroundColor: Colors.white,
+            title: const Text(
+              'Jadwal Kuliah',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          body: BatikPageBackground(
+            isLight: true,
+            child: ScheduleTab(
+              student: _currentStudent,
+              schedules: _dashboardData?["schedules"] as List<dynamic>?,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
@@ -69,20 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
         dashboardData: _dashboardData,
         onRefresh: _loadDashboard,
         onOpenScanner: _openScanner,
-        onNavigateToSchedule: () {
+        onNavigateToSchedule: _openSchedulePage,
+        onNavigateToHistory: () {
           setState(() {
             _currentIndex = 1;
           });
         },
-        onNavigateToHistory: () {
-          setState(() {
-            _currentIndex = 2;
-          });
-        },
-      ),
-      ScheduleTab(
-        student: _currentStudent,
-        schedules: _dashboardData?["schedules"] as List<dynamic>?,
       ),
       HistoryTab(
         student: _currentStudent,
@@ -92,38 +118,23 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       ProfileTab(
         student: _currentStudent,
-        onNavigateToSchedule: () {
-          setState(() {
-            _currentIndex = 1;
-          });
-        },
+        onNavigateToSchedule: _openSchedulePage,
         onNavigateToHistory: () {
           setState(() {
-            _currentIndex = 2;
+            _currentIndex = 1;
           });
         },
       ),
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF140224),
+      backgroundColor: const Color(0xFFFAF9FD),
       body: BatikPageBackground(
+        isLight: true,
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 250),
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.02),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            );
-          },
           child: KeyedSubtree(
             key: ValueKey<int>(_currentIndex),
             child: pages[_currentIndex],
@@ -131,24 +142,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // Center Elevated Floating Action Button (QR Scanner)
+      // Floating QR Scanner Action Button
       floatingActionButton: Container(
-        width: 58,
-        height: 58,
-        margin: const EdgeInsets.only(top: 30),
+        width: 56,
+        height: 56,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Color(0xFF7E22CE), Color(0xFF581C87)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(color: const Color(0xFFFDE047), width: 2),
           shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFFFDE047), width: 2),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF9333EA).withValues(alpha: 0.5),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
+              color: const Color(0xFF581C87).withValues(alpha: 0.35),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
@@ -161,100 +171,88 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(
                 Icons.qr_code_scanner_rounded,
                 color: Colors.white,
-                size: 28,
+                size: 26,
               ),
             ),
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
-      // Bottom Navigation Bar with Notch
+      // Clean 3-Tab Bottom Navigation Bar matching the Mockup Reference
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF140224),
+          color: Colors.white,
           border: Border(
             top: BorderSide(
-              color: Colors.white.withValues(alpha: 0.15),
+              color: const Color(0xFFE2E8F0).withValues(alpha: 0.9),
               width: 1,
             ),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 18,
+              color: const Color(0xFF581C87).withValues(alpha: 0.06),
+              blurRadius: 16,
               offset: const Offset(0, -4),
             ),
           ],
         ),
-        child: BottomAppBar(
-          color: const Color(0xFF140224),
-          surfaceTintColor: Colors.transparent,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          height: 68,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // Beranda (0)
-              _buildNavButton(
-                icon: Icons.home_rounded,
-                label: 'Beranda',
-                isSelected: _currentIndex == 0,
-                onTap: () => setState(() => _currentIndex = 0),
-              ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // 1. Beranda
+                _buildNavItem(
+                  index: 0,
+                  icon: Icons.home_rounded,
+                  label: 'Beranda',
+                  isSelected: _currentIndex == 0,
+                ),
 
-              // Jadwal (1)
-              _buildNavButton(
-                icon: Icons.calendar_today_rounded,
-                label: 'Jadwal',
-                isSelected: _currentIndex == 1,
-                onTap: () => setState(() => _currentIndex = 1),
-              ),
+                // 2. Riwayat
+                _buildNavItem(
+                  index: 1,
+                  icon: Icons.history_rounded,
+                  label: 'Riwayat',
+                  isSelected: _currentIndex == 1,
+                ),
 
-              // Placeholder gap for Center Floating Action Button
-              const SizedBox(width: 48),
-
-              // Riwayat (2)
-              _buildNavButton(
-                icon: Icons.access_time_rounded,
-                label: 'Riwayat',
-                isSelected: _currentIndex == 2,
-                onTap: () => setState(() => _currentIndex = 2),
-              ),
-
-              // Profil (3)
-              _buildNavButton(
-                icon: Icons.person_rounded,
-                label: 'Profil',
-                isSelected: _currentIndex == 3,
-                onTap: () => setState(() => _currentIndex = 3),
-              ),
-            ],
+                // 3. Profil
+                _buildNavItem(
+                  index: 2,
+                  icon: Icons.person_rounded,
+                  label: 'Profil',
+                  isSelected: _currentIndex == 2,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildNavButton({
+  Widget _buildNavItem({
+    required int index,
     required IconData icon,
     required String label,
     required bool isSelected,
-    required VoidCallback onTap,
   }) {
-    const activeColor = Color(0xFFFDE047);
+    const activeColor = Color(0xFF581C87);
     const inactiveColor = Color(0xFF94A3B8);
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
@@ -268,6 +266,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                 color: isSelected ? activeColor : inactiveColor,
+              ),
+            ),
+            const SizedBox(height: 3),
+            // Active underline indicator
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+              width: isSelected ? 18 : 0,
+              height: 2.5,
+              decoration: BoxDecoration(
+                color: isSelected ? activeColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
           ],

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   Users,
   Plus,
@@ -176,8 +176,6 @@ export default function AdminStudentsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
         {/* Toast */}
         {notification && (
@@ -237,37 +235,40 @@ export default function AdminStudentsPage() {
         </div>
 
         {/* Search & Class Filter */}
-        <div className="my-6 flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Cari nama mahasiswa, NIM, kelas, atau nomor WhatsApp..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
-            />
-          </div>
+        <ScrollReveal direction="up" delay={0.05}>
+          <div className="my-6 flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Cari nama mahasiswa, NIM, kelas, atau nomor WhatsApp..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
+              />
+            </div>
 
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400" />
-            <select
-              value={classFilter}
-              onChange={(e) => setClassFilter(e.target.value)}
-              className="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
-            >
-              <option value="ALL">Semua Kelas</option>
-              {uniqueClasses.map((cls) => (
-                <option key={cls} value={cls}>
-                  Kelas {cls}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-slate-400" />
+              <select
+                value={classFilter}
+                onChange={(e) => setClassFilter(e.target.value)}
+                className="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
+              >
+                <option value="ALL">Semua Kelas</option>
+                {uniqueClasses.map((cls) => (
+                  <option key={cls} value={cls}>
+                    Kelas {cls}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <ScrollReveal direction="up" delay={0.1}>
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600">
               <thead className="bg-slate-50/80 text-xs uppercase font-bold text-slate-500 tracking-wider border-b border-slate-200">
@@ -344,6 +345,7 @@ export default function AdminStudentsPage() {
             </table>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* Modal Tambah / Edit Mahasiswa */}
         {isModalOpen && (

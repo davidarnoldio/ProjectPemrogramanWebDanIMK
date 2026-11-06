@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import DynamicQRProjector from "@/components/DynamicQRProjector";
 import Link from "next/link";
 import {
@@ -22,6 +21,7 @@ import {
   FileText,
 } from "lucide-react";
 import { formatIndonesianDateTime, formatIndonesianTime } from "@/lib/utils";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function LecturerSessionControllerPage() {
   const params = useParams();
@@ -127,8 +127,6 @@ export default function LecturerSessionControllerPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
-      <Navbar />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
         {/* Navigation Breadcrumb & Status Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
@@ -190,57 +188,60 @@ export default function LecturerSessionControllerPage() {
         )}
 
         {/* 2. Quick Attendance Metrics Summary */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Total Mahasiswa
-            </span>
-            <div className="text-2xl font-black text-slate-900 mt-1">
-              {enrolledStudents.length}
+        <ScrollReveal direction="up" delay={0.05}>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Total Mahasiswa
+              </span>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {enrolledStudents.length}
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">
+                Hadir (Scan QR)
+              </span>
+              <div className="text-2xl font-black text-emerald-700 mt-1">
+                {attendances.filter((a) => a.status === "HADIR").length}
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                Izin
+              </span>
+              <div className="text-2xl font-black text-amber-700 mt-1">
+                {attendances.filter((a) => a.status === "IZIN").length}
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600">
+                Sakit
+              </span>
+              <div className="text-2xl font-black text-blue-700 mt-1">
+                {attendances.filter((a) => a.status === "SAKIT").length}
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600">
+                Alpa / Belum Scan
+              </span>
+              <div className="text-2xl font-black text-rose-700 mt-1">
+                {Math.max(
+                  0,
+                  enrolledStudents.length -
+                    attendances.filter((a) => a.status === "HADIR").length -
+                    attendances.filter((a) => a.status === "IZIN").length -
+                    attendances.filter((a) => a.status === "SAKIT").length
+                )}
+              </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">
-              Hadir (Scan QR)
-            </span>
-            <div className="text-2xl font-black text-emerald-700 mt-1">
-              {attendances.filter((a) => a.status === "HADIR").length}
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
-              Izin
-            </span>
-            <div className="text-2xl font-black text-amber-700 mt-1">
-              {attendances.filter((a) => a.status === "IZIN").length}
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600">
-              Sakit
-            </span>
-            <div className="text-2xl font-black text-blue-700 mt-1">
-              {attendances.filter((a) => a.status === "SAKIT").length}
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600">
-              Alpa / Belum Scan
-            </span>
-            <div className="text-2xl font-black text-rose-700 mt-1">
-              {Math.max(
-                0,
-                enrolledStudents.length -
-                  attendances.filter((a) => a.status === "HADIR").length -
-                  attendances.filter((a) => a.status === "IZIN").length -
-                  attendances.filter((a) => a.status === "SAKIT").length
-              )}
-            </div>
-          </div>
-        </div>
+        </ScrollReveal>
 
         {/* 3. Manual Attendance Correction & Enrolled Roster Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <ScrollReveal direction="up" delay={0.1}>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="font-extrabold text-base text-slate-900">
@@ -357,6 +358,7 @@ export default function LecturerSessionControllerPage() {
             </table>
           </div>
         </div>
+        </ScrollReveal>
       </main>
     </div>
   );

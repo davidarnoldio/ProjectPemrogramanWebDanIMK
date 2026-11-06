@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   UserCheck,
   Plus,
@@ -171,8 +171,6 @@ export default function AdminLecturersPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
         {/* Toast Notification */}
         {notification && (
@@ -231,21 +229,24 @@ export default function AdminLecturersPage() {
         </div>
 
         {/* Search */}
-        <div className="my-6">
-          <div className="relative max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Cari nama, NIDN, program studi, atau email dosen..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
-            />
+        <ScrollReveal direction="up" delay={0.05}>
+          <div className="my-6">
+            <div className="relative max-w-md">
+              <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Cari nama, NIDN, program studi, atau email dosen..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-700 shadow-sm"
+              />
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <ScrollReveal direction="up" delay={0.1}>
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600">
               <thead className="bg-slate-50/80 text-xs uppercase font-bold text-slate-500 tracking-wider border-b border-slate-200">
@@ -322,6 +323,7 @@ export default function AdminLecturersPage() {
             </table>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* Modal Tambah / Edit Dosen */}
         {isModalOpen && (

@@ -118,11 +118,11 @@ class WelcomeScreen extends StatelessWidget {
 
                     const SizedBox(height: 22),
 
-                    // Headline & Description (White typography for dark Batik background)
+                    // Headline & Description (matches latest web landing page)
                     const Text(
-                      'Presensi Kuliah\nLebih Mudah',
+                      'Presensi Kuliah,\nLebih Mudah & Terintegrasi',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 28,
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
                         height: 1.15,
@@ -131,9 +131,9 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Kelola kehadiran perkuliahan dengan cepat, aman, dan terintegrasi.',
+                      'Sistem presensi digital Universitas Gunadarma dengan QR Code dinamis, monitoring real-time, dan notifikasi otomatis.',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFFE2E8F0),
                         height: 1.45,

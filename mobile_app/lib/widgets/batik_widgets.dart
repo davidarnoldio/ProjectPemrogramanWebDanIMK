@@ -170,41 +170,56 @@ class BatikHeritageBadge extends StatelessWidget {
 }
 
 /// Full-screen royal purple gradient + authentic Indonesian Batik pattern background
-/// matching SplashScreen, with subtle ambient lighting orbs and watermark.
+/// supporting both dark and light modes with subtle ambient lighting orbs and watermark.
 class BatikPageBackground extends StatelessWidget {
   final Widget child;
   final bool showAmbientOrbs;
-  final double batikOpacity;
+  final double? batikOpacity;
+  final bool isLight;
 
   const BatikPageBackground({
     super.key,
     required this.child,
     this.showAmbientOrbs = true,
-    this.batikOpacity = 0.16,
+    this.batikOpacity,
+    this.isLight = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOpacity = batikOpacity ?? (isLight ? 0.035 : 0.16);
+
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF140224), // Ultra deep purple
-            Color(0xFF2E0854), // Royal Gunadarma purple
-            Color(0xFF140224),
-          ],
-        ),
+      decoration: BoxDecoration(
+        color: isLight ? const Color(0xFFFAF9FD) : const Color(0xFF140224),
+        gradient: isLight
+            ? const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFFAF9FD),
+                  Color(0xFFF5F3FF),
+                  Color(0xFFFAF9FD),
+                ],
+              )
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF140224), // Ultra deep purple
+                  Color(0xFF2E0854), // Royal Gunadarma purple
+                  Color(0xFF140224),
+                ],
+              ),
       ),
       child: Stack(
         fit: StackFit.expand,
         children: [
           // Authentic Indonesian Batik pattern texture layer
           Opacity(
-            opacity: batikOpacity,
+            opacity: effectiveOpacity,
             child: Image.asset(
               'assets/images/batik_pattern_purple_gold.jpg',
               fit: BoxFit.cover,
@@ -222,7 +237,9 @@ class BatikPageBackground extends StatelessWidget {
                 height: 240,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFF9333EA).withValues(alpha: 0.14),
+                  color: isLight
+                      ? const Color(0xFF9333EA).withValues(alpha: 0.05)
+                      : const Color(0xFF9333EA).withValues(alpha: 0.14),
                 ),
               ),
             ),
@@ -234,7 +251,9 @@ class BatikPageBackground extends StatelessWidget {
                 height: 220,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFFD97706).withValues(alpha: 0.10),
+                  color: isLight
+                      ? const Color(0xFFD97706).withValues(alpha: 0.04)
+                      : const Color(0xFFD97706).withValues(alpha: 0.10),
                 ),
               ),
             ),
