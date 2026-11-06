@@ -95,68 +95,8 @@ export const initialCourses: Course[] = [
   },
 ];
 
-export const initialClasses: ClassSchedule[] = [
-  {
-    id: "33333333-3333-3333-3333-333333333301",
-    course_id: "22222222-2222-2222-2222-222222222201",
-    lecturer_id: "11111111-1111-1111-1111-111111111101",
-    class_name: "2KA01",
-    room: "Ruang D401 - Kampus D",
-    schedule_day: "Senin",
-    start_time: "07:30",
-    end_time: "10:00",
-    academic_year: "2026/2027 Ganjil",
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333302",
-    course_id: "22222222-2222-2222-2222-222222222202",
-    lecturer_id: "11111111-1111-1111-1111-111111111102",
-    class_name: "2KA01",
-    room: "Lab Sistem Informasi E301",
-    schedule_day: "Selasa",
-    start_time: "10:30",
-    end_time: "13:00",
-    academic_year: "2026/2027 Ganjil",
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333303",
-    course_id: "22222222-2222-2222-2222-222222222203",
-    lecturer_id: "11111111-1111-1111-1111-111111111104",
-    class_name: "2KA02",
-    room: "Ruang E405 - Kampus E",
-    schedule_day: "Rabu",
-    start_time: "13:30",
-    end_time: "16:00",
-    academic_year: "2026/2027 Ganjil",
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333304",
-    course_id: "22222222-2222-2222-2222-222222222204",
-    lecturer_id: "11111111-1111-1111-1111-111111111103",
-    class_name: "3IA01",
-    room: "Lab Lanjut Mobile G202",
-    schedule_day: "Kamis",
-    start_time: "09:00",
-    end_time: "11:30",
-    academic_year: "2026/2027 Ganjil",
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333305",
-    course_id: "22222222-2222-2222-2222-222222222205",
-    lecturer_id: "11111111-1111-1111-1111-111111111105",
-    class_name: "2KA01",
-    room: "Ruang D308 - Kampus D",
-    schedule_day: "Jumat",
-    start_time: "08:30",
-    end_time: "10:10",
-    academic_year: "2026/2027 Ganjil",
-    created_at: new Date().toISOString(),
-  },
-];
+// In-Memory Teaching Schedules Store (Dikosongkan agar Dosen mengunggah/menginput manual)
+export const initialClasses: ClassSchedule[] = [];
 
 export const initialStudents: Student[] = [
   {
@@ -197,58 +137,11 @@ export interface Enrollment {
   student_id: string;
 }
 
-export const initialEnrollments: Enrollment[] = [
-  { id: "e1", class_id: "33333333-3333-3333-3333-333333333301", student_id: "44444444-4444-4444-4444-444444444401" },
-  { id: "e2", class_id: "33333333-3333-3333-3333-333333333301", student_id: "44444444-4444-4444-4444-444444444402" },
-  { id: "e3", class_id: "33333333-3333-3333-3333-333333333302", student_id: "44444444-4444-4444-4444-444444444401" },
-  { id: "e4", class_id: "33333333-3333-3333-3333-333333333302", student_id: "44444444-4444-4444-4444-444444444402" },
-  { id: "e5", class_id: "33333333-3333-3333-3333-333333333305", student_id: "44444444-4444-4444-4444-444444444401" },
-];
+export const initialEnrollments: Enrollment[] = [];
 
-export const initialSessions: ClassSession[] = [
-  {
-    id: "55555555-5555-5555-5555-555555555501",
-    class_id: "33333333-3333-3333-3333-333333333302",
-    meeting_number: 5,
-    topic: "State Management & Supabase Realtime di Next.js",
-    custom_room: "Lab Sistem Informasi E301",
-    status: "OPEN",
-    active_qr_token: "INITIAL_UG_QR_TOKEN_DEMO",
-    token_expires_at: new Date(Date.now() + 3600 * 1000).toISOString(),
-    started_at: new Date().toISOString(),
-    is_rescheduled: false,
-  },
-  {
-    id: "55555555-5555-5555-5555-555555555502",
-    class_id: "33333333-3333-3333-3333-333333333301",
-    meeting_number: 4,
-    topic: "Analisis Kebutuhan Sistem & DFD Level 1",
-    custom_room: "Ruang D401 - Kampus D",
-    status: "CLOSED",
-    active_qr_token: null,
-    token_expires_at: null,
-    started_at: new Date(Date.now() - 7 * 86400 * 1000).toISOString(),
-    ended_at: new Date(Date.now() - 7 * 86400 * 1000 + 7200 * 1000).toISOString(),
-    is_rescheduled: false,
-  },
-];
+export const initialSessions: ClassSession[] = [];
 
-export const initialAttendances: Attendance[] = [
-  {
-    id: "att-1",
-    session_id: "55555555-5555-5555-5555-555555555502",
-    student_id: "44444444-4444-4444-4444-444444444401",
-    status: "HADIR",
-    scanned_at: new Date(Date.now() - 7 * 86400 * 1000).toISOString(),
-  },
-  {
-    id: "att-2",
-    session_id: "55555555-5555-5555-5555-555555555502",
-    student_id: "44444444-4444-4444-4444-444444444402",
-    status: "HADIR",
-    scanned_at: new Date(Date.now() - 7 * 86400 * 1000).toISOString(),
-  },
-];
+export const initialAttendances: Attendance[] = [];
 
 export const initialPermissions: Permission[] = [];
 
@@ -317,6 +210,26 @@ class DatabaseStore {
     return this.students.filter((s) => studentIds.includes(s.id));
   }
 
+  addClassSchedule(cls: ClassSchedule) {
+    this.classes.unshift(cls);
+    // Auto-enroll matching students
+    const matchingStudents = this.students.filter(
+      (s) => s.class_group.toLowerCase() === cls.class_name.toLowerCase()
+    );
+    for (const student of matchingStudents) {
+      const already = this.enrollments.some(
+        (e) => e.class_id === cls.id && e.student_id === student.id
+      );
+      if (!already) {
+        this.enrollments.push({
+          id: `e-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          class_id: cls.id,
+          student_id: student.id,
+        });
+      }
+    }
+  }
+
   // Rolling valid tokens cache: sessionId -> Map<token, expiresAtTimestamp>
   validTokens: Map<string, Map<string, number>> = new Map();
 
@@ -359,6 +272,12 @@ declare global {
 
 if (!global.__ug_db_store || typeof (global.__ug_db_store as any).isValidToken !== "function") {
   global.__ug_db_store = new DatabaseStore();
+} else {
+  // Synchronize on reload so empty dummy teaching schedules take effect immediately
+  global.__ug_db_store.classes = [...initialClasses];
+  global.__ug_db_store.enrollments = [...initialEnrollments];
+  global.__ug_db_store.sessions = [...initialSessions];
+  global.__ug_db_store.attendances = [...initialAttendances];
 }
 
 export const dbStore = global.__ug_db_store;

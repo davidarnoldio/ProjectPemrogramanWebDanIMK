@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ug_attendance_mobile/screens/login_screen.dart';
+import 'package:ug_attendance_mobile/screens/home_screen.dart';
 import 'package:ug_attendance_mobile/widgets/aesthetic_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -38,19 +41,38 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Auto-navigate to LoginScreen after 2.3 seconds
+    // Auto-navigate after 2.3 seconds with session check
     Future.delayed(const Duration(milliseconds: 2300), () {
       if (mounted) {
-        _navigateToLogin();
+        _checkSessionAndNavigate();
       }
     });
   }
 
-  void _navigateToLogin() {
-    Navigator.pushReplacement(
-      context,
-      AestheticPageRoute(page: const LoginScreen()),
-    );
+  Future<void> _checkSessionAndNavigate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionStr = prefs.getString("student_session");
+      if (sessionStr != null && sessionStr.isNotEmpty) {
+        final student = jsonDecode(sessionStr) as Map<String, dynamic>;
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            AestheticPageRoute(page: HomeScreen(student: student)),
+          );
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint("Error reading session: $e");
+    }
+
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        AestheticPageRoute(page: const LoginScreen()),
+      );
+    }
   }
 
   @override
@@ -63,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: _navigateToLogin,
+        onTap: _checkSessionAndNavigate,
         child: Container(
           width: double.infinity,
           height: double.infinity,

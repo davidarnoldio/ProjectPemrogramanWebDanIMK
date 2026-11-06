@@ -4,6 +4,7 @@ import 'package:ug_attendance_mobile/screens/schedule_tab.dart';
 import 'package:ug_attendance_mobile/screens/history_tab.dart';
 import 'package:ug_attendance_mobile/screens/profile_tab.dart';
 import 'package:ug_attendance_mobile/screens/qr_scanner_screen.dart';
+import 'package:ug_attendance_mobile/services/api_service.dart';
 import 'package:ug_attendance_mobile/widgets/aesthetic_page.dart';
 import 'package:ug_attendance_mobile/widgets/batik_widgets.dart';
 
@@ -18,14 +19,41 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  Map<String, dynamic>? _dashboardData;
+  late Map<String, dynamic> _currentStudent;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentStudent = Map<String, dynamic>.from(widget.student);
+    _loadDashboard();
+  }
+
+  Future<void> _loadDashboard() async {
+    try {
+      final nim = (_currentStudent["nim"] ?? "10124001").toString();
+      final data = await ApiService().getStudentDashboard(nim);
+      if (mounted) {
+        setState(() {
+          _dashboardData = data;
+          if (data["student"] != null && data["student"] is Map) {
+            _currentStudent = Map<String, dynamic>.from(data["student"]);
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint("Failed to load student dashboard: $e");
+    }
+  }
 
   void _openScanner() {
     Navigator.push(
       context,
       AestheticPageRoute(
         page: QRScannerScreen(
-          student: widget.student,
+          student: _currentStudent,
           onScanSuccess: () {
+            _loadDashboard();
             setState(() {});
           },
         ),
@@ -37,7 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       HomeTab(
-        student: widget.student,
+        student: _currentStudent,
+        dashboardData: _dashboardData,
+        onRefresh: _loadDashboard,
         onOpenScanner: _openScanner,
         onNavigateToSchedule: () {
           setState(() {
@@ -51,13 +81,17 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       ScheduleTab(
-        student: widget.student,
+        student: _currentStudent,
+        schedules: _dashboardData?["schedules"] as List<dynamic>?,
       ),
       HistoryTab(
-        student: widget.student,
+        student: _currentStudent,
+        attendances: _dashboardData?["attendances"] as List<dynamic>?,
+        sessions: _dashboardData?["sessions"] as List<dynamic>?,
+        onRefresh: _loadDashboard,
       ),
       ProfileTab(
-        student: widget.student,
+        student: _currentStudent,
         onNavigateToSchedule: () {
           setState(() {
             _currentIndex = 1;

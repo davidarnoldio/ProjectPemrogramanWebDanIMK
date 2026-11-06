@@ -194,34 +194,16 @@ INSERT INTO courses (id, code, name, sks, department) VALUES
 ('22222222-2222-2222-2222-222222222204', 'IT045301', 'Pemrograman Perangkat Bergerak (Mobile)', 3, 'Teknik Informatika'),
 ('22222222-2222-2222-2222-222222222205', 'AK045204', 'Manajemen Proyek Sistem Informasi', 2, 'Sistem Informasi');
 
--- 3. Dummy Jadwal Perkuliahan (Classes)
-INSERT INTO classes (id, course_id, lecturer_id, class_name, room, schedule_day, start_time, end_time, academic_year) VALUES
-('33333333-3333-3333-3333-333333333301', '22222222-2222-2222-2222-222222222201', '11111111-1111-1111-1111-111111111101', '2KA01', 'Ruang D401 - Kampus D', 'Senin', '07:30', '10:00', '2026/2027 Ganjil'),
-('33333333-3333-3333-3333-333333333302', '22222222-2222-2222-2222-222222222202', '11111111-1111-1111-1111-111111111102', '2KA01', 'Lab Sistem Informasi E301', 'Selasa', '10:30', '13:00', '2026/2027 Ganjil'),
-('33333333-3333-3333-3333-333333333303', '22222222-2222-2222-2222-222222222203', '11111111-1111-1111-1111-111111111104', '2KA02', 'Ruang E405 - Kampus E', 'Rabu', '13:30', '16:00', '2026/2027 Ganjil'),
-('33333333-3333-3333-3333-333333333304', '22222222-2222-2222-2222-222222222204', '11111111-1111-1111-1111-111111111103', '3IA01', 'Lab Lanjut Mobile G202', 'Kamis', '09:00', '11:30', '2026/2027 Ganjil'),
-('33333333-3333-3333-3333-333333333305', '22222222-2222-2222-2222-222222222205', '11111111-1111-1111-1111-111111111105', '2KA01', 'Ruang D308 - Kampus D', 'Jumat', '08:30', '10:10', '2026/2027 Ganjil');
-
--- 4. Dummy Mahasiswa
+-- 3. Dummy Mahasiswa
 INSERT INTO students (id, nim, name, department, class_group, semester, parent_phone) VALUES
 ('44444444-4444-4444-4444-444444444401', '10124001', 'Ahmad Fauzi', 'Sistem Informasi', '2KA01', 4, '6281299990001'),
 ('44444444-4444-4444-4444-444444444402', '10124002', 'Nadya Putri Utami', 'Sistem Informasi', '2KA01', 4, '6281299990002'),
 ('44444444-4444-4444-4444-444444444403', '10124003', 'Rizky Ramadhan', 'Sistem Informasi', '2KA02', 4, '6281299990003');
 
--- 5. Dummy Enrollment KRS
-INSERT INTO course_enrollments (class_id, student_id) VALUES
-('33333333-3333-3333-3333-333333333301', '44444444-4444-4444-4444-444444444401'),
-('33333333-3333-3333-3333-333333333301', '44444444-4444-4444-4444-444444444402'),
-('33333333-3333-3333-3333-333333333302', '44444444-4444-4444-4444-444444444401'),
-('33333333-3333-3333-3333-333333333302', '44444444-4444-4444-4444-444444444402'),
-('33333333-3333-3333-3333-333333333305', '44444444-4444-4444-4444-444444444401');
-
--- 6. Dummy Sesi Perkuliahan Aktif untuk Demonstrasi
-INSERT INTO class_sessions (id, class_id, meeting_number, topic, custom_room, status, active_qr_token, token_expires_at, started_at) VALUES
-('55555555-5555-5555-5555-555555555501', '33333333-3333-3333-3333-333333333302', 5, 'State Management & Supabase Realtime di Next.js', 'Lab Sistem Informasi E301', 'OPEN', 'INITIAL_UG_QR_TOKEN_DEMO', NOW() + INTERVAL '1 hour', NOW()),
-('55555555-5555-5555-5555-555555555502', '33333333-3333-3333-3333-333333333301', 4, 'Analisis Kebutuhan Sistem & DFD Level 1', 'Ruang D401 - Kampus D', 'CLOSED', NULL, NULL, NOW() - INTERVAL '7 days');
-
--- 7. Dummy Presensi Terdaftar
-INSERT INTO attendances (session_id, student_id, status, scanned_at) VALUES
-('55555555-5555-5555-5555-555555555502', '44444444-4444-4444-4444-444444444401', 'HADIR', NOW() - INTERVAL '7 days'),
-('55555555-5555-5555-5555-555555555502', '44444444-4444-4444-4444-444444444402', 'HADIR', NOW() - INTERVAL '7 days');
+-- 4. JADWAL MENGAJAR (CLASSES) - DIKOSONGKAN
+-- Data dummy jadwal mengajar perkuliahan dikosongkan agar dosen dapat mengunggah (upload) 
+-- atau menginput jadwal secara manual melalui Portal Dosen.
+-- INSERT INTO classes ... (Dikosongkan)
+-- INSERT INTO course_enrollments ... (Dikosongkan)
+-- INSERT INTO class_sessions ... (Dikosongkan)
+-- INSERT INTO attendances ... (Dikosongkan)

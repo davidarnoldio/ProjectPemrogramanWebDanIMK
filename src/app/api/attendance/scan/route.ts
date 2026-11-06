@@ -8,6 +8,40 @@ const FONNTE_API_URL = "https://api.fonnte.com/send";
 const FONNTE_TOKEN = process.env.FONNTE_TOKEN || "dummy_fonnte_token_for_dev";
 
 /**
+ * Universitas Gunadarma Campus Geofence Definitions
+ */
+const GUNADARMA_CAMPUSES = [
+  { name: "Kampus D (Margonda Raya, Depok)", lat: -6.3686, lng: 106.8332 },
+  { name: "Kampus E (Kelapa Dua, Depok)", lat: -6.3545, lng: 106.8416 },
+  { name: "Kampus J (Kalimalang, Bekasi)", lat: -6.2514, lng: 106.9698 },
+  { name: "Kampus F (Salemba, Jakarta Pusat)", lat: -6.1944, lng: 106.8492 },
+  { name: "Kampus K (Karawaci, Tangerang)", lat: -6.2238, lng: 106.6085 },
+];
+
+/**
+ * Calculates distance in meters between two GPS coordinates using Haversine formula
+ */
+function calculateHaversineDistanceMeters(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371e3; // Earth radius in meters
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
  * Asynchronous non-blocking WhatsApp dispatcher via Fonnte Gateway
  */
 async function sendWhatsAppAsync(targetPhone: string, message: string) {
@@ -46,7 +80,7 @@ async function sendWhatsAppAsync(targetPhone: string, message: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    let { sessionId, token, studentId, studentNim } = body;
+    let { sessionId, token, studentId, studentNim, deviceId, latitude, longitude } = body;
 
     // Auto-unpack if sent as JSON from QR scanner (supporting both short keys 's'/'t' and full keys)
     if (typeof token === "string" && token.trim().startsWith("{")) {
@@ -54,6 +88,9 @@ export async function POST(req: Request) {
         const parsed = JSON.parse(token);
         token = parsed.t || parsed.token || token;
         sessionId = parsed.s || parsed.sessionId || sessionId;
+        deviceId = parsed.d || parsed.deviceId || deviceId;
+        latitude = parsed.lat || parsed.latitude || latitude;
+        longitude = parsed.lng || parsed.longitude || longitude;
       } catch (_) {}
     }
 
@@ -82,6 +119,79 @@ export async function POST(req: Request) {
         { error: "Data mahasiswa tidak ditemukan." },
         { status: 404 }
       );
+    }
+
+    // 2. Anti-Titip Absen: Device Binding Validation
+    if (deviceId && typeof deviceId === "string" && deviceId.trim().length > 0) {
+      const cleanDeviceId = deviceId.trim();
+      if (!student.device_id) {
+        // Automatically bind this first smartphone device to the student
+        student.device_id = cleanDeviceId;
+        try {
+          await supabaseAdmin
+            .from("students")
+            .update({ device_id: cleanDeviceId })
+            .eq("id", student.id);
+        } catch (e) {
+          console.warn("Supabase device binding fallback:", e);
+        }
+      } else if (student.device_id !== cleanDeviceId) {
+        // Attempting to scan from an unlinked/other person's device - strictly reject!
+        return NextResponse.json(
+          {
+            error: `Anti-Titip Absen Terdeteksi: Akun mahasiswa ${student.name} (${student.nim}) telah terikat pada perangkat smartphone lain. Anda tidak dapat melakukan presensi melalui perangkat orang lain. Hubungi BAAK jika Anda berganti perangkat.`,
+            code: "DEVICE_MISMATCH",
+          },
+          { status: 403 }
+        );
+      }
+    }
+
+    // 3. Geofencing Validation (Radius Kampus Universitas Gunadarma)
+    if (
+      latitude !== undefined &&
+      longitude !== undefined &&
+      latitude !== null &&
+      longitude !== null &&
+      Number(latitude) !== 0 &&
+      Number(longitude) !== 0
+    ) {
+      const numLat = Number(latitude);
+      const numLng = Number(longitude);
+
+      let nearestCampus = GUNADARMA_CAMPUSES[0];
+      let minDistance = calculateHaversineDistanceMeters(
+        numLat,
+        numLng,
+        nearestCampus.lat,
+        nearestCampus.lng
+      );
+
+      for (let i = 1; i < GUNADARMA_CAMPUSES.length; i++) {
+        const d = calculateHaversineDistanceMeters(
+          numLat,
+          numLng,
+          GUNADARMA_CAMPUSES[i].lat,
+          GUNADARMA_CAMPUSES[i].lng
+        );
+        if (d < minDistance) {
+          minDistance = d;
+          nearestCampus = GUNADARMA_CAMPUSES[i];
+        }
+      }
+
+      const MAX_ALLOWED_DISTANCE_METERS = 1000; // 1.0 km radius tolerance
+      if (minDistance > MAX_ALLOWED_DISTANCE_METERS) {
+        return NextResponse.json(
+          {
+            error: `Presensi Ditolak: Lokasi Anda terdeteksi berada di luar area kampus (${Math.round(minDistance)}m dari ${nearestCampus.name}). Presensi wajib dilakukan di dalam radius kampus Universitas Gunadarma.`,
+            code: "OUTSIDE_GEOFENCE",
+            nearestCampus: nearestCampus.name,
+            distanceMeters: Math.round(minDistance),
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // 2. Validate Session

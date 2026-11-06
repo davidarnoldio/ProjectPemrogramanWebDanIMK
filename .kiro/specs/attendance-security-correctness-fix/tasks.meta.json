@@ -1,0 +1,615 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write bug condition exploration tests": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357916198
+      },
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357942693
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358763576
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358784778
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing the fix)": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357916796
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358763845
+      }
+    ],
+    "3.1 Add the runtime dependencies": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357917528
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358764070
+      }
+    ],
+    "3.2 Add the config module and the Supabase clients": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357917827
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358764339
+      }
+    ],
+    "3.3 Add the shared HTTP helpers": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357918108
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358764551
+      }
+    ],
+    "3.4 Add the pure authorization decision function": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357918435
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358764770
+      }
+    ],
+    "3.5 Add the Supabase-backed data module": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357918677
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358764993
+      }
+    ],
+    "3.6 Add the shared auth helper": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357918895
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358765185
+      }
+    ],
+    "3.7 Add the QR payload and token helpers": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357919137
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358765423
+      }
+    ],
+    "3.8 Add the attendance helpers and extract the phone rule": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357919418
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358765625
+      }
+    ],
+    "3.9 Add the page route guard": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357919658
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358765850
+      }
+    ],
+    "4.1 Write the RLS migration": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357919919
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358766028
+      }
+    ],
+    "4.2 Edit the seed file": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357920147
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358766216
+      }
+    ],
+    "4.3 Write the demo user seeding script": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357920436
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358766409
+      }
+    ],
+    "4.4 [MANUAL] Apply the database changes to the dev Supabase project": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357920701
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358766594
+      }
+    ],
+    "5.1 Rewrite the login page": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357920955
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358766851
+      }
+    ],
+    "5.2 Add the shared change-password handler and `/api/auth/change-password`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357921201
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358767037
+      }
+    ],
+    "5.3 Add the `/change-password` page": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357921507
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358767221
+      }
+    ],
+    "5.4 Add the middleware": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357921781
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358767412
+      }
+    ],
+    "5.5 [MANUAL] Check web authentication in the browser": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357922060
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358767619
+      }
+    ],
+    "6.1 Migrate the admin read routes": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357922335
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358767845
+      }
+    ],
+    "6.2 Migrate `POST /api/admin/students` with rollback": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357922702
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358768107
+      }
+    ],
+    "6.3 Migrate `POST /api/admin/lecturers` with rollback": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357923046
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358768285
+      }
+    ],
+    "6.4 Migrate the admin write routes": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357923422
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358768506
+      }
+    ],
+    "6.5 Remove the lecturer switcher from the dashboard": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357923714
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358768694
+      }
+    ],
+    "7.1 Migrate `GET/POST /api/lecturer/sessions`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357924004
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358768889
+      }
+    ],
+    "7.2 Migrate `GET/PUT/PATCH /api/lecturer/sessions/[id]`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357924272
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358769136
+      }
+    ],
+    "7.3 Migrate `POST /api/qr/rotate` to issued tokens": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357924612
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358769325
+      }
+    ],
+    "7.4 Migrate `POST /api/attendance/scan`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357924894
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358769534
+      }
+    ],
+    "7.5 Migrate `GET /api/student/me`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357925148
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358769697
+      }
+    ],
+    "7.6 Migrate `/api/student/permissions`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357925380
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358769927
+      }
+    ],
+    "7.7 Switch `/api/student/change-password` to the shared handler": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357925655
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358770339
+      }
+    ],
+    "7.8 Stop using the initial token in the lecturer session page and the projector": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357925953
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358770581
+      }
+    ],
+    "7.9 Add the mobile build configuration and Supabase bootstrap": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357926199
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358770777
+      }
+    ],
+    "7.10 Rewrite the mobile ApiService": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357926475
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358770974
+      }
+    ],
+    "7.11 Add the mobile QR payload parser": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357926905
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358771238
+      }
+    ],
+    "7.12 Update the mobile screens": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357927349
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358771435
+      }
+    ],
+    "7.13 [MANUAL] Verify this step on the web and on a device (Flutter)": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357927676
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358771627
+      }
+    ],
+    "8.1 Stabilize the QR payload and the rotation scheduler": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357927998
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358771824
+      }
+    ],
+    "8.2 Fix sound, Realtime, live feed, and header": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357928385
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358772105
+      }
+    ],
+    "8.3 [MANUAL] Check the projector in the browser": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357928723
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358772418
+      }
+    ],
+    "9.1 Remove the in-memory store and the old clients": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357929053
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358772671
+      }
+    ],
+    "9.2 Update `.env.example`": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357929375
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358772927
+      }
+    ],
+    "9.3 Update the README": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357929733
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358773209
+      }
+    ],
+    "9.4 Run the static checks": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357930027
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358773582
+      }
+    ],
+    "10.1 Write and run the fix-checking HTTP suite": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357930319
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358773848
+      }
+    ],
+    "10.2 [MANUAL] Check the database access rules and Realtime": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357930611
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358774131
+      }
+    ],
+    "10.3 Verify the bug condition exploration tests now pass": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357930899
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358774437
+      }
+    ],
+    "10.4 Verify the preservation tests still pass": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357931181
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358774712
+      }
+    ],
+    "11. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "a674ec2a-926c-48a8-aa77-1c58b33b3de8",
+        "chatSessionId": "sess_2ab54fbd-3be9-49f9-8745-28e04616d764",
+        "timestamp": 1793357931474
+      },
+      {
+        "executionId": "7e9bca2f-6559-43ab-aadf-15dfc7f28047",
+        "chatSessionId": "sess_54005602-620e-40c0-8faa-938aea1e3d74",
+        "timestamp": 1793358775027
+      }
+    ]
+  }
+}

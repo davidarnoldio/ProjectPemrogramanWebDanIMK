@@ -7,7 +7,9 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const lecturerId = url.searchParams.get("lecturerId");
 
-  let sessions = dbStore.sessions.map((s) => dbStore.getEnrichedSession(s.id)!);
+  let sessions = dbStore.sessions
+    .map((s) => dbStore.getEnrichedSession(s.id))
+    .filter(Boolean) as any[];
 
   if (lecturerId) {
     sessions = sessions.filter(

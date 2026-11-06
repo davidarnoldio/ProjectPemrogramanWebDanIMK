@@ -25,6 +25,97 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
+    // Check if bulk/batch upload (Array or { items: [...] })
+    const items = Array.isArray(body)
+      ? body
+      : Array.isArray(body?.items)
+      ? body.items
+      : null;
+
+    if (items) {
+      if (items.length === 0) {
+        return NextResponse.json({ error: "Daftar jadwal kosong." }, { status: 400 });
+      }
+
+      const createdList = [];
+
+      for (const item of items) {
+        let courseId = item.course_id;
+
+        // Auto-match course by code or name if not provided directly
+        if (!courseId && (item.course_code || item.course_name)) {
+          const matchedCourse = dbStore.courses.find(
+            (c) =>
+              (item.course_code && c.code.toLowerCase() === item.course_code.toLowerCase()) ||
+              (item.course_name && c.name.toLowerCase() === item.course_name.toLowerCase())
+          );
+
+          if (matchedCourse) {
+            courseId = matchedCourse.id;
+          } else {
+            // Auto-create new course if not yet in master
+            const newCourseId = crypto.randomUUID();
+            const newCourse = {
+              id: newCourseId,
+              code: item.course_code || `MK-${Math.floor(1000 + Math.random() * 9000)}`,
+              name: item.course_name || "Mata Kuliah Baru",
+              sks: Number(item.sks) || 3,
+              department: item.department || "Sistem Informasi",
+            };
+            dbStore.courses.push(newCourse);
+            courseId = newCourseId;
+          }
+        }
+
+        const lecturerId = item.lecturer_id;
+        const className = item.class_name;
+        const room = item.room;
+        const scheduleDay = item.schedule_day;
+        const startTime = item.start_time;
+        const endTime = item.end_time;
+        const academicYear = item.academic_year || "2026/2027 Ganjil";
+
+        if (!courseId || !lecturerId || !className || !room || !scheduleDay || !startTime || !endTime) {
+          continue; // Skip invalid rows
+        }
+
+        const newId = crypto.randomUUID();
+        const newClass = {
+          id: newId,
+          course_id: courseId,
+          lecturer_id: lecturerId,
+          class_name: className,
+          room: room,
+          schedule_day: scheduleDay,
+          start_time: startTime,
+          end_time: endTime,
+          academic_year: academicYear,
+          created_at: new Date().toISOString(),
+        };
+
+        try {
+          await supabaseAdmin.from("classes").insert(newClass);
+        } catch (e) {
+          console.warn("Supabase batch insert fallback:", e);
+        }
+
+        dbStore.addClassSchedule(newClass);
+        const enriched = dbStore.getEnrichedClass(newId);
+        if (enriched) createdList.push(enriched);
+      }
+
+      return NextResponse.json(
+        {
+          message: `${createdList.length} jadwal perkuliahan berhasil diunggah`,
+          count: createdList.length,
+          data: createdList,
+        },
+        { status: 201 }
+      );
+    }
+
+    // Single schedule addition
     const {
       course_id,
       lecturer_id,
@@ -64,8 +155,8 @@ export async function POST(req: Request) {
       console.warn("Supabase insert fallback:", e);
     }
 
-    // Update in-memory store
-    dbStore.classes.unshift(newClass);
+    // Update in-memory store & auto-enroll matching students
+    dbStore.addClassSchedule(newClass);
     const enriched = dbStore.getEnrichedClass(newId);
 
     return NextResponse.json(

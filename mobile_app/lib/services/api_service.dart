@@ -59,6 +59,9 @@ class ApiService {
     required String studentNim,
     required String studentId,
     String? preferredHost,
+    String? deviceId,
+    double? latitude,
+    double? longitude,
   }) async {
     final hostsToTry = <String>[];
     if (preferredHost != null && preferredHost.isNotEmpty) {
@@ -89,6 +92,9 @@ class ApiService {
             "token": token,
             "studentNim": studentNim,
             "studentId": studentId,
+            "deviceId": deviceId,
+            "latitude": latitude,
+            "longitude": longitude,
           },
         );
 
@@ -152,6 +158,35 @@ class ApiService {
       return {
         "success": false,
         "error": e.response?.data?["error"] ?? "Gagal mengajukan izin.",
+      };
+    }
+  }
+
+  /// Upload permission attachment file
+  Future<Map<String, dynamic>> uploadAttachment({
+    required String base64Data,
+    required String fileName,
+  }) async {
+    try {
+      final res = await _dio.post(
+        "$baseUrl/api/upload",
+        data: {
+          "base64": base64Data,
+          "name": fileName,
+        },
+      );
+      if (res.statusCode == 200) {
+        return {
+          "success": true,
+          "url": res.data["url"],
+          "fileName": res.data["fileName"],
+        };
+      }
+      return {"success": false, "error": "Gagal mengunggah file."};
+    } on DioException catch (e) {
+      return {
+        "success": false,
+        "error": e.response?.data?["error"] ?? "Gagal terhubung ke server upload.",
       };
     }
   }

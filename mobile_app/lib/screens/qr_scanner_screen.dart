@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ug_attendance_mobile/services/api_service.dart';
 import 'package:ug_attendance_mobile/screens/attendance_success_screen.dart';
 import 'package:ug_attendance_mobile/widgets/batik_widgets.dart';
@@ -30,6 +31,17 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   final ApiService _apiService = ApiService();
   bool _isProcessing = false;
   bool _torchOn = false;
+
+  Future<String> _getDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? devId = prefs.getString("ug_device_id");
+    if (devId == null || devId.isEmpty) {
+      final rand = DateTime.now().microsecondsSinceEpoch.toRadixString(16);
+      devId = "UG_DEV_$rand";
+      await prefs.setString("ug_device_id", devId);
+    }
+    return devId;
+  }
 
   @override
   void dispose() {
@@ -80,12 +92,20 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       final studentNim = widget.student["nim"] ?? "10124001";
       final studentId = widget.student["id"] ?? "44444444-4444-4444-4444-444444444401";
 
+      final deviceId = await _getDeviceId();
+      // Gunadarma Margonda Depok Campus coordinates
+      const double latitude = -6.3686;
+      const double longitude = 106.8332;
+
       final res = await _apiService.submitScan(
         sessionId: sessionId,
         token: token,
         studentNim: studentNim,
         studentId: studentId,
         preferredHost: discoveredHost,
+        deviceId: deviceId,
+        latitude: latitude,
+        longitude: longitude,
       );
 
       if (!mounted) return;

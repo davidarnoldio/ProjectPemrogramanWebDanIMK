@@ -13,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
       backgroundColor: const Color(0xFF140224),
       body: Stack(
         fit: StackFit.expand,
-        children: [
+        children: [ 
           // Royal Gunadarma purple gradient background (matches SplashScreen)
           Container(
             decoration: const BoxDecoration(

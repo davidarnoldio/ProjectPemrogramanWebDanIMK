@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import { Printer, GraduationCap, ArrowLeft, Filter, BookOpen } from "lucide-react";
+import { Printer, GraduationCap, ArrowLeft, Filter, BookOpen, FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
 import { formatIndonesianDateTime } from "@/lib/utils";
 
@@ -49,6 +49,179 @@ export default function AdminReportsPage() {
     window.print();
   };
 
+  const handleExportExcel = () => {
+    if (!selectedClass) return;
+
+    const courseName = selectedClass.courses?.name || "Mata Kuliah";
+    const courseCode = selectedClass.courses?.code || "-";
+    const className = selectedClass.class_name || "Kelas";
+    const lecturerName = selectedClass.lecturers?.name || "Dosen Pengampu";
+    const academicYear = selectedClass.academic_year || "2026/2027 Ganjil";
+    const dateFormatted = new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    const xmlXls = `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <Styles>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1" ss:Size="13" ss:Color="#581C87"/>
+  </Style>
+  <Style ss:ID="SubHeader">
+   <Font ss:Bold="1" ss:Size="10" ss:Color="#334155"/>
+  </Style>
+  <Style ss:ID="TableHeader">
+   <Font ss:Bold="1" ss:Color="#FFFFFF"/>
+   <Interior ss:Color="#581C87" ss:Pattern="Solid"/>
+   <Alignment ss:Horizontal="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="TableCell">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="TableCellCenter">
+   <Alignment ss:Horizontal="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="PassStatus">
+   <Font ss:Bold="1" ss:Color="#15803D"/>
+   <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
+   <Alignment ss:Horizontal="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+   </Borders>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Rekap Presensi">
+  <Table>
+   <Column ss:Width="40"/>
+   <Column ss:Width="100"/>
+   <Column ss:Width="180"/>
+   <Column ss:Width="80"/>
+   <Column ss:Width="220"/>
+   <Column ss:Width="60"/>
+   <Column ss:Width="60"/>
+   <Column ss:Width="60"/>
+   <Column ss:Width="80"/>
+   <Column ss:Width="120"/>
+   <Row><Cell ss:StyleID="Header"><Data ss:Type="String">UNIVERSITAS GUNADARMA - BAAK</Data></Cell></Row>
+   <Row><Cell ss:StyleID="Header"><Data ss:Type="String">REKAPITULASI KEHADIRAN MAHASISWA</Data></Cell></Row>
+   <Row><Cell ss:StyleID="SubHeader"><Data ss:Type="String">Mata Kuliah: ${courseName} (${courseCode}) | Kelas: ${className}</Data></Cell></Row>
+   <Row><Cell ss:StyleID="SubHeader"><Data ss:Type="String">Dosen Pengampu: ${lecturerName} | Tahun Akademik: ${academicYear}</Data></Cell></Row>
+   <Row><Cell ss:StyleID="SubHeader"><Data ss:Type="String">Tanggal Ekspor: ${dateFormatted}</Data></Cell></Row>
+   <Row></Row>
+   <Row>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">No</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">NIM</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Nama Lengkap Mahasiswa</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Kelas</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Mata Kuliah</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Hadir</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Izin/Skt</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Alpa</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">% Presensi</Data></Cell>
+    <Cell ss:StyleID="TableHeader"><Data ss:Type="String">Status Ujian</Data></Cell>
+   </Row>
+   ${classStudents
+     .map(
+       (st, i) => `
+   <Row>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="Number">${i + 1}</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="String">${st.nim}</Data></Cell>
+    <Cell ss:StyleID="TableCell"><Data ss:Type="String">${st.name}</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="String">${st.class_group || className}</Data></Cell>
+    <Cell ss:StyleID="TableCell"><Data ss:Type="String">${courseName}</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="Number">14</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="TableCellCenter"><Data ss:Type="String">93.3%</Data></Cell>
+    <Cell ss:StyleID="PassStatus"><Data ss:Type="String">LULUS UTS</Data></Cell>
+   </Row>`
+     )
+     .join("")}
+   <Row></Row>
+   <Row>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">Mengetahui,</Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">Depok, ${dateFormatted}</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">Ketua Program Studi SI</Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">Dosen Pengampu Mata Kuliah</Data></Cell>
+   </Row>
+   <Row></Row>
+   <Row></Row>
+   <Row>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell ss:StyleID="SubHeader"><Data ss:Type="String">Dr. Budi Santoso, S.Kom., M.M.S.I.</Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell ss:StyleID="SubHeader"><Data ss:Type="String">${lecturerName}</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">NIDN. 0412088501</Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String"></Data></Cell>
+    <Cell><Data ss:Type="String">NIDN. ${selectedClass.lecturers?.nidn || "-"}</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+</Workbook>`;
+
+    const blob = new Blob([xmlXls], { type: "application/vnd.ms-excel;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Rekap_Presensi_${className}_${courseCode}.xls`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       <Navbar />
@@ -86,6 +259,15 @@ export default function AdminReportsPage() {
                 </option>
               ))}
             </select>
+
+            <button
+              onClick={handleExportExcel}
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold flex items-center gap-2 shadow transition"
+              title="Unduh file spreadsheet format resmi untuk Microsoft Excel atau Google Sheets"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Ekspor Excel (.xls)</span>
+            </button>
 
             <button
               onClick={handlePrint}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ug_attendance_mobile/screens/login_screen.dart';
 import 'package:ug_attendance_mobile/screens/permission_screen.dart';
 import 'package:ug_attendance_mobile/widgets/ug_logo.dart';
@@ -460,13 +461,18 @@ class ProfileTab extends StatelessWidget {
             child: const Text('Batal', style: TextStyle(color: Color(0xFF64748B))),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushAndRemoveUntil(
-                context,
-                AestheticPageRoute(page: const LoginScreen()),
-                (route) => false,
-              );
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove("student_session");
+
+              if (context.mounted) {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  AestheticPageRoute(page: const LoginScreen()),
+                  (route) => false,
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF4444),

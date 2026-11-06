@@ -6,6 +6,8 @@ import 'package:lottie/lottie.dart';
 
 class HomeTab extends StatelessWidget {
   final Map<String, dynamic> student;
+  final Map<String, dynamic>? dashboardData;
+  final Future<void> Function()? onRefresh;
   final VoidCallback onOpenScanner;
   final VoidCallback onNavigateToSchedule;
   final VoidCallback onNavigateToHistory;
@@ -13,6 +15,8 @@ class HomeTab extends StatelessWidget {
   const HomeTab({
     super.key,
     required this.student,
+    this.dashboardData,
+    this.onRefresh,
     required this.onOpenScanner,
     required this.onNavigateToSchedule,
     required this.onNavigateToHistory,
@@ -23,15 +27,27 @@ class HomeTab extends StatelessWidget {
     final studentName = student["name"] ?? "Ahmad Fauzi";
     final firstName = studentName.split(" ").first;
 
+    final stats = dashboardData?["stats"] as Map<String, dynamic>?;
+    final totalPresent = stats?["totalPresent"] ?? 3;
+    final totalCourses = stats?["totalCourses"] ?? 4;
+    final attendanceRate = (stats?["attendanceRate"] as num?)?.toDouble() ?? 75.0;
+    final progressValue = (attendanceRate / 100.0).clamp(0.0, 1.0);
+    final schedulesList = (dashboardData?["schedules"] as List<dynamic>?) ?? [];
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: AestheticPageWrapper(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: RefreshIndicator(
+            onRefresh: onRefresh ?? () async {},
+            color: const Color(0xFF581C87),
+            backgroundColor: Colors.white,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 // Header: Halo, Ahmad & Notification Bell
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,13 +190,13 @@ class HomeTab extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                                const Row(
+                                Row(
                                   crossAxisAlignment: CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     Text(
-                                      '3',
-                                      style: TextStyle(
+                                      '$totalPresent',
+                                      style: const TextStyle(
                                         fontSize: 34,
                                         fontWeight: FontWeight.w900,
                                         color: Color(0xFF581C87),
@@ -188,8 +204,8 @@ class HomeTab extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      ' / 4',
-                                      style: TextStyle(
+                                      ' / $totalCourses',
+                                      style: const TextStyle(
                                         fontSize: 19,
                                         fontWeight: FontWeight.w800,
                                         color: Color(0xFFD97706),
@@ -209,24 +225,24 @@ class HomeTab extends StatelessWidget {
                               ],
                             ),
 
-                            // Circular Progress Ring (75%)
-                            const SizedBox(
+                            // Circular Progress Ring (Dynamic from backend)
+                            SizedBox(
                               width: 68,
                               height: 68,
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   CircularProgressIndicator(
-                                    value: 0.75,
+                                    value: progressValue,
                                     strokeWidth: 6.5,
-                                    backgroundColor: Color(0xFFF3E8FF),
-                                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF581C87)),
+                                    backgroundColor: const Color(0xFFF3E8FF),
+                                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF581C87)),
                                     strokeCap: StrokeCap.round,
                                   ),
                                   Text(
-                                    '75%',
-                                    style: TextStyle(
-                                      fontSize: 14,
+                                    '${attendanceRate.toInt()}%',
+                                    style: const TextStyle(
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w900,
                                       color: Color(0xFF581C87),
                                     ),
@@ -392,49 +408,73 @@ class HomeTab extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // Real Course Cards list for Ahmad Fauzi (2KA01) - Solid White Cards
-                _buildCourseCard(
-                  icon: Icons.code_rounded,
-                  iconBg: const Color(0xFFFAF5FF),
-                  iconColor: const Color(0xFF581C87),
-                  title: 'Pemrograman Web',
-                  time: '08:00 - 09:40',
-                  room: 'Kelas 2KA01 • Ruang Lab E301',
-                  badgeText: 'Hadir',
-                  badgeBg: const Color(0xFFDCFCE7),
-                  badgeColor: const Color(0xFF15803D),
-                ),
-                const SizedBox(height: 10),
-                _buildCourseCard(
-                  icon: Icons.storage_rounded,
-                  iconBg: const Color(0xFFEFF6FF),
-                  iconColor: const Color(0xFF2563EB),
-                  title: 'Basis Data',
-                  time: '10:00 - 11:40',
-                  room: 'Kelas 2KA01 • Ruang Lab E302',
-                  badgeText: 'Menunggu',
-                  badgeBg: const Color(0xFFDBEAFE),
-                  badgeColor: const Color(0xFF1D4ED8),
-                ),
-                const SizedBox(height: 10),
-                _buildCourseCard(
-                  icon: Icons.devices_rounded,
-                  iconBg: const Color(0xFFF8FAFC),
-                  iconColor: const Color(0xFF64748B),
-                  title: 'Analisis & Perancangan SI',
-                  time: '13:00 - 14:40',
-                  room: 'Kelas 2KA01 • Ruang 2.3',
-                  badgeText: 'Belum',
-                  badgeBg: const Color(0xFFF1F5F9),
-                  badgeColor: const Color(0xFF64748B),
-                ),
+                if (schedulesList.isNotEmpty) ...[
+                  ...schedulesList.map((item) {
+                    final courseName = (item["courses"]?["name"] ?? item["name"] ?? "Mata Kuliah") as String;
+                    final courseTime = "${item["start_time"] ?? "08:00"} - ${item["end_time"] ?? "09:40"}";
+                    final courseRoom = "Kelas ${item["class_name"] ?? student["class_group"] ?? "2KA01"} • ${item["room"] ?? "Ruang Kuliah"}";
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _buildCourseCard(
+                        icon: Icons.menu_book_rounded,
+                        iconBg: const Color(0xFFFAF5FF),
+                        iconColor: const Color(0xFF581C87),
+                        title: courseName,
+                        time: courseTime,
+                        room: courseRoom,
+                        badgeText: 'Jadwal Aktif',
+                        badgeBg: const Color(0xFFDBEAFE),
+                        badgeColor: const Color(0xFF1D4ED8),
+                      ),
+                    );
+                  }),
+                ] else ...[
+                  // Real Course Cards list for Ahmad Fauzi (2KA01) - Solid White Cards
+                  _buildCourseCard(
+                    icon: Icons.code_rounded,
+                    iconBg: const Color(0xFFFAF5FF),
+                    iconColor: const Color(0xFF581C87),
+                    title: 'Pemrograman Web',
+                    time: '08:00 - 09:40',
+                    room: 'Kelas 2KA01 • Ruang Lab E301',
+                    badgeText: 'Hadir',
+                    badgeBg: const Color(0xFFDCFCE7),
+                    badgeColor: const Color(0xFF15803D),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildCourseCard(
+                    icon: Icons.storage_rounded,
+                    iconBg: const Color(0xFFEFF6FF),
+                    iconColor: const Color(0xFF2563EB),
+                    title: 'Basis Data',
+                    time: '10:00 - 11:40',
+                    room: 'Kelas 2KA01 • Ruang Lab E302',
+                    badgeText: 'Menunggu',
+                    badgeBg: const Color(0xFFDBEAFE),
+                    badgeColor: const Color(0xFF1D4ED8),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildCourseCard(
+                    icon: Icons.devices_rounded,
+                    iconBg: const Color(0xFFF8FAFC),
+                    iconColor: const Color(0xFF64748B),
+                    title: 'Analisis & Perancangan SI',
+                    time: '13:00 - 14:40',
+                    room: 'Kelas 2KA01 • Ruang 2.3',
+                    badgeText: 'Belum',
+                    badgeBg: const Color(0xFFF1F5F9),
+                    badgeColor: const Color(0xFF64748B),
+                  ),
+                ],
               ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildActionCard({
     required IconData icon,

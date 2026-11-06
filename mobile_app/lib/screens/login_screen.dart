@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ug_attendance_mobile/services/api_service.dart';
 import 'package:ug_attendance_mobile/screens/home_screen.dart';
 import 'package:ug_attendance_mobile/screens/change_password_screen.dart';
@@ -54,9 +56,17 @@ class _LoginScreenState extends State<LoginScreen> {
           "class_group": "2KA01",
           "parent_phone": "6281299990001",
         };
+        // Save session locally for persistent login
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString("student_session", jsonEncode(student));
+
         final bool mustChangePassword = res["mustChangePassword"] == true;
 
         if (mustChangePassword) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString("student_session", jsonEncode(student));
+          if (!mounted) return;
+
           Navigator.pushReplacement(
             context,
             AestheticPageRoute(
@@ -67,6 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         } else {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString("student_session", jsonEncode(student));
+          if (!mounted) return;
+
           Navigator.pushReplacement(
             context,
             AestheticPageRoute(
@@ -86,6 +100,10 @@ class _LoginScreenState extends State<LoginScreen> {
             "semester": 4,
             "parent_phone": "6281299990001",
           };
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString("student_session", jsonEncode(student));
+          if (!mounted) return;
+
           Navigator.pushReplacement(
             context,
             AestheticPageRoute(
@@ -110,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
           "semester": 4,
           "parent_phone": "6281299990001",
         };
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           AestheticPageRoute(

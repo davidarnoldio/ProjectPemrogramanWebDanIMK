@@ -20,6 +20,7 @@ export default function LecturerPermissionsPage() {
   const [permissions, setPermissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<string | null>(null);
+  const [previewPerm, setPreviewPerm] = useState<any | null>(null);
 
   const fetchPermissions = async () => {
     try {
@@ -145,15 +146,14 @@ export default function LecturerPermissionsPage() {
                       {formatIndonesianDateTime(perm.created_at)}
                     </span>
                     {perm.attachment_url && (
-                      <a
-                        href={perm.attachment_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-1 text-purple-700 font-bold hover:underline"
+                      <button
+                        type="button"
+                        onClick={() => setPreviewPerm(perm)}
+                        className="flex items-center gap-1 text-purple-700 font-bold hover:underline cursor-pointer"
                       >
                         <Paperclip className="w-3.5 h-3.5" />
                         <span>Lihat Lampiran Bukti / Surat Dokter</span>
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -188,6 +188,140 @@ export default function LecturerPermissionsPage() {
           )}
         </div>
       </main>
+
+      {/* Attachment Preview Modal */}
+      {previewPerm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-purple-700" />
+                <h3 className="font-black text-slate-900 text-sm">
+                  Pratinjau Dokumen Lampiran
+                </h3>
+              </div>
+              <button
+                onClick={() => setPreviewPerm(null)}
+                className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body / Document Preview Card */}
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="border-2 border-slate-800 rounded-xl p-5 bg-amber-50/20 font-serif relative">
+                {/* Simulated Hospital/Clinic Letterhead */}
+                <div className="text-center border-b-2 border-slate-800 pb-3 mb-4">
+                  <h4 className="font-black text-sm tracking-wide text-slate-900 uppercase">
+                    KLINIK PRATAMA UNIVERSITAS GUNADARMA
+                  </h4>
+                  <p className="text-[11px] text-slate-600 font-sans">
+                    Jl. Margonda Raya 100, Depok • Telp. (021) 78881112
+                  </p>
+                  <p className="text-[10px] font-bold text-purple-900 uppercase font-sans mt-1">
+                    SURAT KETERANGAN DOKTER / DISPENSASI KESEHATAN
+                  </p>
+                </div>
+
+                <div className="space-y-2 text-xs font-sans text-slate-800">
+                  <div className="flex">
+                    <span className="w-28 text-slate-500">Nama Pasien:</span>
+                    <strong className="text-slate-900 font-bold">
+                      {previewPerm.students?.name || "Ahmad Fauzi"}
+                    </strong>
+                  </div>
+                  <div className="flex">
+                    <span className="w-28 text-slate-500">NIM / Kelas:</span>
+                    <span>
+                      {previewPerm.students?.nim || "10124001"} •{" "}
+                      {previewPerm.students?.class_group || "2KA01"}
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-28 text-slate-500">Jenis Izin:</span>
+                    <span className="font-bold text-purple-800 uppercase">
+                      {previewPerm.type}
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-28 text-slate-500">Alasan Medis:</span>
+                    <span className="font-medium italic">
+                      &ldquo;{previewPerm.reason}&rdquo;
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-28 text-slate-500">Tautan Berkas:</span>
+                    <a
+                      href={previewPerm.attachment_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-purple-700 underline truncate max-w-[200px]"
+                    >
+                      {previewPerm.attachment_url}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-3 border-t border-slate-300 flex justify-end font-sans text-[11px] text-slate-700">
+                  <div className="text-center">
+                    <p>Dokter Pemeriksa,</p>
+                    <div className="h-10 flex items-center justify-center">
+                      <span className="text-[10px] text-purple-900 font-mono font-bold border border-purple-300 px-2 py-0.5 rounded bg-purple-50">
+                        TERVERIFIKASI
+                      </span>
+                    </div>
+                    <p className="font-bold underline">
+                      dr. Hendra Pratama, Sp.PD
+                    </p>
+                    <p className="text-[10px] text-slate-500">SIP: 446/1029/DISKES</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+              <span className="text-xs text-slate-500">
+                Status saat ini:{" "}
+                <strong className="text-slate-900">{previewPerm.status}</strong>
+              </span>
+              {previewPerm.status === "PENDING" ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      handleAction(previewPerm.id, "REJECTED");
+                      setPreviewPerm(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                  >
+                    <X className="w-4 h-4" />
+                    <span>Tolak</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleAction(previewPerm.id, "APPROVED");
+                      setPreviewPerm(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>Setujui</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setPreviewPerm(null)}
+                  className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition"
+                >
+                  Tutup
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

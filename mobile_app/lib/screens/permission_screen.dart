@@ -23,9 +23,132 @@ class _PermissionScreenState extends State<PermissionScreen> {
   String _selectedType = "IZIN"; // "IZIN" or "SAKIT"
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _attachmentController = TextEditingController(
-    text: "https://gunadarma.ac.id/surat_keterangan_dokter_10124001.pdf",
+    text: "https://gunadarma.ac.id/uploads/surat_keterangan_dokter_10124001.pdf",
   );
+  String _attachedFileName = "Surat_Keterangan_Dokter_Klinik_UG.pdf";
+  String _attachedFileSize = "1.2 MB • Dokumen Resmi";
   bool _isLoading = false;
+  bool _showCustomUrl = false;
+
+  void _showAttachmentPicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFCBD5E1),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Pilih Sumber Dokumen / Foto",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF0F172A),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  "Unggah surat keterangan sakit dokter atau surat izin dispensasi resmi.",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFAF5FF),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.camera_alt_rounded, color: Color(0xFF581C87)),
+                  ),
+                  title: const Text(
+                    "Ambil Foto Surat dengan Kamera",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF0F172A)),
+                  ),
+                  subtitle: const Text("Foto langsung surat keterangan fisik Anda", style: TextStyle(fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _attachedFileName = "Foto_Surat_Dokter_Kamera_${widget.student['nim']}.jpg";
+                      _attachedFileSize = "2.1 MB • Foto Kamera";
+                      _attachmentController.text = "https://gunadarma.ac.id/uploads/surat_kamera_${widget.student['nim']}.jpg";
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.photo_library_rounded, color: Color(0xFF2563EB)),
+                  ),
+                  title: const Text(
+                    "Pilih dari Galeri Smartphone",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF0F172A)),
+                  ),
+                  subtitle: const Text("Pilih berkas/gambar dari galeri HP", style: TextStyle(fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _attachedFileName = "Surat_Dokter_RS_Bunda_${widget.student['nim']}.jpg";
+                      _attachedFileSize = "1.8 MB • Gambar JPG";
+                      _attachmentController.text = "https://gunadarma.ac.id/uploads/surat_dokter_rs_bunda.jpg";
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF3C7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.picture_as_pdf_rounded, color: Color(0xFFB45309)),
+                  ),
+                  title: const Text(
+                    "Surat Keterangan Sakit Klinik Gunadarma",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF0F172A)),
+                  ),
+                  subtitle: const Text("Format PDF resmi berstempel klinik", style: TextStyle(fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _attachedFileName = "Surat_Keterangan_Sakit_Klinik_UG.pdf";
+                      _attachedFileSize = "850 KB • Dokumen PDF";
+                      _attachmentController.text = "https://gunadarma.ac.id/uploads/surat_sakit_klinik_ug.pdf";
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _handleSubmit() async {
     final reason = _reasonController.text.trim();
@@ -324,40 +447,184 @@ class _PermissionScreenState extends State<PermissionScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Attachment Link
-              const Text(
-                "LAMPIRAN SURAT / BUKTI (LINK PDF/GAMBAR)",
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFFDE047),
-                  letterSpacing: 0.5,
-                ),
+              // Attachment Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "LAMPIRAN SURAT / BUKTI RESMI",
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFDE047),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _showCustomUrl = !_showCustomUrl;
+                      });
+                    },
+                    icon: Icon(
+                      _showCustomUrl ? Icons.visibility_off : Icons.link,
+                      size: 14,
+                      color: const Color(0xFFCBD5E1),
+                    ),
+                    label: Text(
+                      _showCustomUrl ? "Sembunyikan URL" : "Edit URL Manual",
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFFCBD5E1),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
-              TextField(
-                controller: _attachmentController,
-                style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.link, color: Color(0xFF581C87)),
-                  hintText: "https://...",
-                  hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(color: Color(0xFF581C87), width: 1.5),
-                  ),
+
+              // Solid White Interactive Document Attachment Card
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.14),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: _selectedType == "SAKIT"
+                                ? const Color(0xFFEFF6FF)
+                                : const Color(0xFFFAF5FF),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: _selectedType == "SAKIT"
+                                  ? const Color(0xFFBFDBFE)
+                                  : const Color(0xFFE9D5FF),
+                            ),
+                          ),
+                          child: Icon(
+                            _selectedType == "SAKIT"
+                                ? Icons.medical_services_rounded
+                                : Icons.file_present_rounded,
+                            color: _selectedType == "SAKIT"
+                                ? const Color(0xFF2563EB)
+                                : const Color(0xFF7E22CE),
+                            size: 26,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _attachedFileName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                  color: Color(0xFF0F172A),
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFDCFCE7),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text(
+                                      "Siap Unggah",
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w800,
+                                        color: Color(0xFF15803D),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    _attachedFileSize,
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _showAttachmentPicker,
+                        icon: const Icon(Icons.attach_file_rounded, size: 16),
+                        label: const Text(
+                          "Pilih / Ganti Berkas Surat",
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF581C87),
+                          side: const BorderSide(color: Color(0xFF7E22CE), width: 1.2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+              if (_showCustomUrl) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _attachmentController,
+                  style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.link, color: Color(0xFF581C87)),
+                    hintText: "https://...",
+                    hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Color(0xFF581C87), width: 1.5),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 28),
 
               // Submit Button - Solid White

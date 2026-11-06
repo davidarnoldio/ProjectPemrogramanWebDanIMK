@@ -5,11 +5,17 @@ import 'package:ug_attendance_mobile/widgets/aesthetic_page.dart';
 class HistoryTab extends StatefulWidget {
   final Map<String, dynamic> student;
   final List<dynamic>? historyRecords;
+  final List<dynamic>? sessions;
+  final List<dynamic>? attendances;
+  final Future<void> Function()? onRefresh;
 
   const HistoryTab({
     super.key,
     required this.student,
     this.historyRecords,
+    this.sessions,
+    this.attendances,
+    this.onRefresh,
   });
 
   @override
@@ -20,7 +26,7 @@ class _HistoryTabState extends State<HistoryTab> {
   final String _selectedCourse = "Semua Mata Kuliah";
   final String _selectedMonth = "Oktober 2026";
 
-  // Real attendance history for student Ahmad Fauzi
+  // Default fallback records for student Ahmad Fauzi
   final List<Map<String, dynamic>> _records = [
     {
       "date": "Sen, 20 Okt 2026",
@@ -84,6 +90,100 @@ class _HistoryTabState extends State<HistoryTab> {
     },
   ];
 
+  static String _monthName(int month) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    if (month >= 1 && month <= 12) return months[month - 1];
+    return "";
+  }
+
+  List<Map<String, dynamic>> get _displayRecords {
+    if (widget.attendances != null && widget.attendances!.isNotEmpty) {
+      final List<Map<String, dynamic>> list = [];
+      for (final att in widget.attendances!) {
+        dynamic session;
+        if (widget.sessions != null) {
+          try {
+            session = widget.sessions!.firstWhere(
+              (s) => s['id'] == att['session_id'],
+              orElse: () => null,
+            );
+          } catch (_) {
+            session = null;
+          }
+        }
+
+        final statusStr = (att['status'] ?? 'HADIR').toString().toUpperCase();
+        Color color;
+        Color bgColor;
+        IconData icon;
+
+        switch (statusStr) {
+          case 'IZIN':
+            color = const Color(0xFF1D4ED8);
+            bgColor = const Color(0xFFDBEAFE);
+            icon = Icons.assignment_turned_in_rounded;
+            break;
+          case 'SAKIT':
+            color = const Color(0xFFB45309);
+            bgColor = const Color(0xFFFEF3C7);
+            icon = Icons.medical_services_rounded;
+            break;
+          case 'ALPA':
+            color = const Color(0xFFB91C1C);
+            bgColor = const Color(0xFFFEE2E2);
+            icon = Icons.cancel_rounded;
+            break;
+          case 'HADIR':
+          default:
+            color = const Color(0xFF15803D);
+            bgColor = const Color(0xFFDCFCE7);
+            icon = Icons.check_circle_rounded;
+            break;
+        }
+
+        final rawDate = (att['scanned_at'] ?? session?['date'] ?? session?['created_at'] ?? '').toString();
+        String formattedDate = "Hari ini";
+        String formattedTime = "-";
+        if (rawDate.isNotEmpty) {
+          try {
+            final dt = DateTime.parse(rawDate).toLocal();
+            formattedDate = "${dt.day} ${_monthName(dt.month)} ${dt.year}";
+            formattedTime = "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')} WIB";
+          } catch (_) {
+            formattedDate = rawDate;
+          }
+        }
+
+        final courseName = (session != null && session['classes'] != null && session['classes']['courses'] != null)
+            ? session['classes']['courses']['name'].toString()
+            : (session != null && session['course_name'] != null)
+                ? session['course_name'].toString()
+                : "Mata Kuliah Kampus";
+
+        final topic = (session != null && session['topic'] != null)
+            ? "Pertemuan: ${session['topic']}"
+            : "Pertemuan Perkuliahan";
+
+        list.add({
+          "date": formattedDate,
+          "time": formattedTime,
+          "course": courseName,
+          "topic": topic,
+          "status": statusStr[0] + statusStr.substring(1).toLowerCase(),
+          "color": color,
+          "bgColor": bgColor,
+          "icon": icon,
+        });
+      }
+      if (list.isNotEmpty) return list;
+    }
+    return _records;
+  }
+
+  int _countStatus(String status) {
+    return _displayRecords.where((r) => (r["status"] as String).toLowerCase() == status.toLowerCase()).length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +218,8 @@ class _HistoryTabState extends State<HistoryTab> {
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
@@ -142,14 +243,16 @@ class _HistoryTabState extends State<HistoryTab> {
                                 color: Color(0xFF1E293B),
                               ),
                             ),
-                            const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: Color(0xFF581C87)),
+                            const Icon(Icons.keyboard_arrow_down_rounded,
+                                size: 18, color: Color(0xFF581C87)),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(14),
@@ -173,7 +276,8 @@ class _HistoryTabState extends State<HistoryTab> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: Color(0xFF581C87)),
+                          const Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 18, color: Color(0xFF581C87)),
                         ],
                       ),
                     ),
@@ -188,13 +292,17 @@ class _HistoryTabState extends State<HistoryTab> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    _buildStatPill("Hadir", "12", const Color(0xFFDCFCE7), const Color(0xFF15803D)),
+                    _buildStatPill("Hadir", "${_countStatus('Hadir')}", const Color(0xFFDCFCE7),
+                        const Color(0xFF15803D)),
                     const SizedBox(width: 8),
-                    _buildStatPill("Izin", "1", const Color(0xFFDBEAFE), const Color(0xFF1D4ED8)),
+                    _buildStatPill("Izin", "${_countStatus('Izin')}", const Color(0xFFDBEAFE),
+                        const Color(0xFF1D4ED8)),
                     const SizedBox(width: 8),
-                    _buildStatPill("Sakit", "0", const Color(0xFFFEF3C7), const Color(0xFFB45309)),
+                    _buildStatPill("Sakit", "${_countStatus('Sakit')}", const Color(0xFFFEF3C7),
+                        const Color(0xFFB45309)),
                     const SizedBox(width: 8),
-                    _buildStatPill("Alpa", "1", const Color(0xFFFEE2E2), const Color(0xFFB91C1C)),
+                    _buildStatPill("Alpa", "${_countStatus('Alpa')}", const Color(0xFFFEE2E2),
+                        const Color(0xFFB91C1C)),
                   ],
                 ),
               ),
@@ -203,80 +311,105 @@ class _HistoryTabState extends State<HistoryTab> {
 
               // Chronological list - Solid White Cards
               Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
-                  itemCount: _records.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final record = _records[index];
-                    return Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.16),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${record['date']} • ${record['time']}",
-                                style: const TextStyle(
-                                  fontSize: 11,
+                child: RefreshIndicator(
+                  color: const Color(0xFF581C87),
+                  backgroundColor: Colors.white,
+                  onRefresh: widget.onRefresh ?? () async {},
+                  child: _displayRecords.isEmpty
+                      ? ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: const [
+                            SizedBox(height: 60),
+                            Center(
+                              child: Text(
+                                "Belum ada riwayat presensi tercatat.",
+                                style: TextStyle(
+                                  color: Color(0xFF94A3B8),
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF64748B),
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: record["bgColor"] as Color,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  record["status"] as String,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
-                                    color: record["color"] as Color,
+                            ),
+                          ],
+                        )
+                      : ListView.separated(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
+                          itemCount: _displayRecords.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final record = _displayRecords[index];
+                            return Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(color: const Color(0xFFE2E8F0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.16),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            record["course"] as String,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF0F172A),
-                              letterSpacing: -0.2,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            record["topic"] as String,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF64748B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${record['date']} • ${record['time']}",
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF64748B),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: record["bgColor"] as Color,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          record["status"] as String,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w800,
+                                            color: record["color"] as Color,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    record["course"] as String,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF0F172A),
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    record["topic"] as String,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ),
             ],
@@ -286,7 +419,8 @@ class _HistoryTabState extends State<HistoryTab> {
     );
   }
 
-  Widget _buildStatPill(String label, String value, Color bgColor, Color textColor) {
+  Widget _buildStatPill(
+      String label, String value, Color bgColor, Color textColor) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
